@@ -29,6 +29,8 @@ export PYTHON_PATH="python_path"
 ln -s $PATH_PYTHON/lib/python3.6/site-packages/* .
 ```
 
+This particular step is really important, because then you can use python modules (netCDF4, xarray, and others) and local installations from your main python distribution.
+
 For more information look at:
 https://wiki.blender.org/index.php/Dev:Doc/Building_Blender/Mac
 
