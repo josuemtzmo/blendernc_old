@@ -4,12 +4,13 @@ import cmocean as cm
 from pylab import *
 import bpy
 import math
- 
+
 # mesh arrays
 verts = []
 faces = []
  
 depth=Dataset('/Users/josue/Documents/academia/phd/github/data.input/MOM6/topog.nc')
+#depth=Dataset('/Users/josue/Documents/academia/phd/github/MITgcm/verification/dome/run/myncfile.nc')
 dd=depth.variables['depth'][:]
 
  
