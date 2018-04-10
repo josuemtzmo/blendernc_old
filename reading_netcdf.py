@@ -53,7 +53,11 @@ mesh = bpy.data.meshes.new("wave")
 object = bpy.data.objects.new("wave",mesh)
  
 #set mesh location
+<<<<<<< HEAD
 object.location = (0,0,0)
+=======
+object.location = bpy.context.scene.cursor_location
+>>>>>>> bf9935ca46b17297e21457b2891d4d115ac81450
 bpy.context.scene.objects.link(object)
  
 #create mesh from python data
