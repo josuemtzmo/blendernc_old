@@ -38,8 +38,7 @@ ln -s $PATH_PYTHON/lib/python3.6/site-packages/* .
 
 This particular step is really important, because then you can use python modules (netCDF4, xarray, and others) and local installations from your main python distribution.
 
-For more information look at:
-https://wiki.blender.org/index.php/Dev:Doc/Building_Blender/Mac
+For more information look at [Blender installation website](https://wiki.blender.org/index.php/Dev:Doc/Building_Blender/).
 
 The Add-on is not finished, so to test it you need to run it from the Text Editor Menu (Alt + P).
 
