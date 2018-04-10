@@ -1,15 +1,13 @@
 # blendernc (Blender Addon 4 scientific visualization)
-<<<<<<< HEAD
 
 This add-on provides support of netCDF files into blender, additional, due to the porpouse of its development, the color map used is CMOCEAN (Read more about it at [cmocean GitHub](https://github.com/matplotlib/cmocean)):
 
-![Alt Text](https://github.com/Josue-Martinez-Moreno/blendernc/cmocean_materials.png "cmocean colorbar in different textures")
+![Alt Text](https://github.com/Josue-Martinez-Moreno/blendernc/blob/master/cmocean_materials.png "cmocean colorbar in different textures")
 
 
-# Installation:
+## Installation:
 
 =======
->>>>>>> bf9935ca46b17297e21457b2891d4d115ac81450
 **Testend on Blender v2.79 with PYTHON 3.6**
 
 Compile blender from scratch, The instructions are mostly the same as the official installation instructions except for a few modifications specified below: 
@@ -40,18 +38,13 @@ export PYTHON_PATH="python_path"
 ln -s $PATH_PYTHON/lib/python3.6/site-packages/* .
 ```
 
-<<<<<<< HEAD
 This particular step is really important, because then you can use python modules (netCDF4, xarray, and others) and local installations from your main python distribution. Otherwise you can link particular modules using the same idea.
 =======
 This particular step is really important, because then you can use python modules (netCDF4, xarray, and others) and local installations from your main python distribution.
->>>>>>> bf9935ca46b17297e21457b2891d4d115ac81450
 
 For more information look at:
 https://wiki.blender.org/index.php/Dev:Doc/Building_Blender/Mac
 
 The Add-on is not finished, so to test it you need to run it from the Text Editor Menu (Alt + P).
 
-<<<<<<< HEAD
-
 =======
->>>>>>> bf9935ca46b17297e21457b2891d4d115ac81450
