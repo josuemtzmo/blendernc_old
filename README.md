@@ -1,8 +1,15 @@
 # blendernc (Blender Addon 4 scientific visualization)
 
-This add-on provides support of netCDF files into blender, additional, due to the porpouse of its development, the color map used is CMOCEAN (Read more about it at [cmocean GitHub](https://github.com/matplotlib/cmocean)):
+This add-on provides support of netCDF files into Blender. Additional, the colormap CMOCEAN was implemented (Read more about it at [cmocean GitHub](https://github.com/matplotlib/cmocean)).
 
 ![Alt Text](https://github.com/Josue-Martinez-Moreno/blendernc/blob/master/cmocean_materials.png "cmocean colorbar in different textures")
+
+Currently, this add-on allow you to:
+- Import 2D fields:
+![Alt Text](https://github.com/Josue-Martinez-Moreno/blendernc/blob/master/somov_topog.png "Somov Sea Topography")
+
+- Imported 3D fields: 
+![Alt Text](https://github.com/Josue-Martinez-Moreno/blendernc/blob/master/figures/animation_data.gif "Sin & Cos Function")
 
 ## Installation:
 
