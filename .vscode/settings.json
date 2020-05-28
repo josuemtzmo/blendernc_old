@@ -1,3 +1,5 @@
 {
-    "restructuredtext.confPath": ""
+    "restructuredtext.confPath": "",
+    "python.linting.enabled": false,
+    "python.pythonPath": "/Users/josue/.anaconda3/envs/blender2.8/bin/python"
 }
