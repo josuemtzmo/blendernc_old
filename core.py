@@ -6,8 +6,9 @@ from . import files_utils
 
 class BlenderncEngine():
     def __init__(self):
-        self.blender_file_path = files_utils.get_file_path()
+        self.current_file_path = files_utils.get_addon_path()
 
+    # TO DO : move to file_utils
     def check_files_netcdf(self,file_path):
         if os.path.isfile(file_path):
             self.file_path = file_path
@@ -41,6 +42,19 @@ class BlenderncEngine():
         var_names = [(variable[ii], variable[ii], self.dataset[variable[ii]].long_name, "DISK_DRIVE", ii) for ii in range(len(variable))]
         return var_names
 
+    def netcdf_values(self,selected_variable,res):
+        self.selected_variable=selected_variable
+        active_resolution = res/100
+
+        variable = self.dataset[selected_variable]
+        
+        dict_var_shape = {ii:slice(0,variable[ii].size,
+                int(variable[ii].size//(variable[ii].size*active_resolution))) 
+                for ii in variable.coords if 'time' not in ii}
+        print(selected_variable,dict_var_shape)
+        variable_res = variable#.isel(dict_var_shape)
+        return variable_res
+    
 
         #print(self.file_path)
         #self.assets_models = file_ops.generate_items_list(self.assets_path, "blend")

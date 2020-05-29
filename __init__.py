@@ -25,23 +25,35 @@ bl_info = {
 import bpy
 
 from . core import BlenderncEngine
-from . netcdf_load import netCDF_Var, netCDF_load
+from . netcdf_load import Operator_test, netCDF_load, netCDF_resolution, netCDF_texture
 from . blendernc_ui import Blendernc_Panel, ButtonLoadOff, ButtonLoadOn
 
 # Classes to register and unregister
-classes = (netCDF_Var, netCDF_load, Blendernc_Panel, 
+classes = (Operator_test, netCDF_load, netCDF_resolution, netCDF_texture,  Blendernc_Panel, 
             ButtonLoadOff, ButtonLoadOn)
 
 register, unregister = bpy.utils.register_classes_factory(classes)
 
 blendernc_core = BlenderncEngine()
 
-def update_proxy_library(self, context):
+def update_proxy_file(self, context):
     try:
         file_path=bpy.context.scene.blendernc_file
         blendernc_core.check_files_netcdf(file_path)
     except (NameError, ValueError):
         bpy.ops.blendernc.file_error()
+
+def update_proxy_resolution(self, context):
+    bpy.ops.blendernc.netcdf_resolution()
+
+
+
+bpy.types.Scene.blendernc_resolution = bpy.props.FloatProperty(name = 'Resolution', 
+                                                min = 1, max = 100, 
+                                                default = 20,
+                                                update=update_proxy_resolution)
+
+
 
 bpy.types.Scene.blendernc_netcdf_vars = bpy.props.EnumProperty(items=(''),
                                                                 name="")
@@ -51,6 +63,6 @@ bpy.types.Scene.blendernc_file = bpy.props.StringProperty(
     description="Folder with assets blend files",
     default="",
     maxlen=1024,
-    update=update_proxy_library,
+    update=update_proxy_file,
     subtype='FILE_PATH')
 

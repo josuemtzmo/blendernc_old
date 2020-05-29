@@ -49,23 +49,26 @@ class Blendernc_Panel(bpy.types.Panel):
             box_post_opt.operator('blendernc.button_file_on', icon=icon_expand)
         else:
             box_post_opt.operator('blendernc.button_file_off', icon=icon_collapse)
-            # assets_status = mblab_proxy.validate_assets_fitting()
+            # Box containing pop up menu.
             box_asts = box_post_opt.box()
 
-            #Open folders
+            # Open blender file selection
             box_asts.label(text="netCDF File", icon='OUTLINER_OB_GROUP_INSTANCE')
             box_asts.prop(scn, 'blendernc_file')
-
+            # Lasy load of variables for display
             box_asts.operator('blendernc.netcdf_load', text="Load netCDF")
-            #box_asts.prop(scn, 'mblab_assets_models')
-            # box.operator('mbast.load_assets_element')
+            # Select variables menu
             box_asts.label(text="Select variable:", icon='WORLD_DATA')
             box_asts.prop(scn, 'blendernc_netcdf_vars')
-
+            # TO DO: Add info?
             box_asts.label(text="INFO", icon='INFO')
 
-        #row.operator('view3d.open_file', text="Center 3D Cursor")
-        #row.prop(scn.load_file,'get_path', text='Dataset Path',icon='FILESEL')
+
+        box_asts = box_post_opt.box()
+        box_asts.prop(scn, 'blendernc_resolution')
+        box_asts.label(text="Display resolution.", icon='INFO')
+        
+        box_post_opt.operator('blendernc.netcdf2texture', text="Generate Texture")
 
         box_post_opt.operator('blendernc.cursor_center', text="Center 3D Cursor")
 

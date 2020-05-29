@@ -1,3 +1,4 @@
 *.blend1
 figures*
 data*
+*__pycache__*
