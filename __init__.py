@@ -24,30 +24,51 @@ bl_info = {
 
 import bpy
 
+# Import blendernc core
 from . core import BlenderncEngine
-from . netcdf_load import Operator_test, netCDF_load, netCDF_resolution, netCDF_texture
-from . blendernc_ui import Blendernc_Panel, ButtonLoadOff, ButtonLoadOn
+
+# Import bpy clases
+from . netcdf_load import ( TEST_OT_cursor_center, LOAD_NC_OT_netCDF_load, 
+            SELECTED_RESOLUTION_OT_netCDF_load_resolution, 
+            CONVERT_NC_OT_netCDF_texture )
+from . blendernc_ui import ( BLENDERNC_UI_PT_3dview, BLENDERNC_LOAD_OT_Off, 
+            BLENDERNC_LOAD_OT_On)
 
 # Classes to register and unregister
-classes = (Operator_test, netCDF_load, netCDF_resolution, netCDF_texture,  Blendernc_Panel, 
-            ButtonLoadOff, ButtonLoadOn)
+classes = (TEST_OT_cursor_center, LOAD_NC_OT_netCDF_load, 
+            SELECTED_RESOLUTION_OT_netCDF_load_resolution, 
+            CONVERT_NC_OT_netCDF_texture,  BLENDERNC_UI_PT_3dview, 
+            BLENDERNC_LOAD_OT_Off, BLENDERNC_LOAD_OT_On)
 
+# Register and unregister functions
 register, unregister = bpy.utils.register_classes_factory(classes)
 
+# Initialize blendernc core
 blendernc_core = BlenderncEngine()
 
+# Update netCDF variables function of selected netCDF path and check if netCDF 
+# file exists
 def update_proxy_file(self, context):
+    """
+    Update function:
+        -   Checks if netCDF file exists 
+        -   Extracts variable names using netCDF4 conventions.
+    """
     try:
         file_path=bpy.context.scene.blendernc_file
         blendernc_core.check_files_netcdf(file_path)
     except (NameError, ValueError):
         bpy.ops.blendernc.file_error()
 
+# Update resolution function of netCDF dataset
 def update_proxy_resolution(self, context):
+    """
+    Update function:
+        -   Dynamically update the resolution of dataset.
+    """
     bpy.ops.blendernc.netcdf_resolution()
 
-
-
+# Scene globals
 bpy.types.Scene.blendernc_resolution = bpy.props.FloatProperty(name = 'Resolution', 
                                                 min = 1, max = 100, 
                                                 default = 20,
@@ -65,4 +86,3 @@ bpy.types.Scene.blendernc_file = bpy.props.StringProperty(
     maxlen=1024,
     update=update_proxy_file,
     subtype='FILE_PATH')
-
