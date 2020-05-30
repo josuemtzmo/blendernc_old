@@ -1,10 +1,9 @@
 import bpy
 import os
 
-
 gui_active_panel_fin = None
 
-class ButtonLoadOn(bpy.types.Operator):
+class BLENDERNC_LOAD_OT_On(bpy.types.Operator):
     bl_label = 'Load netCDF'
     bl_idname = 'blendernc.button_file_on'
     bl_description = 'Open file and netCDF panel'
@@ -16,8 +15,7 @@ class ButtonLoadOn(bpy.types.Operator):
         gui_active_panel_fin = "Files"
         return {'FINISHED'}
 
-
-class ButtonLoadOff(bpy.types.Operator):
+class BLENDERNC_LOAD_OT_Off(bpy.types.Operator):
     bl_label = 'Load netCDF'
     bl_idname = 'blendernc.button_file_off'
     bl_description = 'Close file and netCDF panel'
@@ -29,7 +27,7 @@ class ButtonLoadOff(bpy.types.Operator):
         gui_active_panel_fin = None
         return {'FINISHED'}
 
-class Blendernc_Panel(bpy.types.Panel):
+class BLENDERNC_UI_PT_3dview(bpy.types.Panel):
     bl_idname = "BLENDERNC_PT_Panel"
     bl_label = "Blendernc"
     bl_category = "Blendernc"
@@ -71,10 +69,3 @@ class Blendernc_Panel(bpy.types.Panel):
         box_post_opt.operator('blendernc.netcdf2texture', text="Generate Texture")
 
         box_post_opt.operator('blendernc.cursor_center', text="Center 3D Cursor")
-
-
-
-
-
-
-

@@ -1,51 +1,56 @@
 # blendernc (Blender Addon 4 scientific visualization)
 
-This add-on provides support of netCDF files into Blender. Additional, the colormap CMOCEAN was implemented (Read more about it at [cmocean GitHub](https://github.com/matplotlib/cmocean)).
+This add-on allows to import netCDF files into Blender as Textures and Objects (Future development). 
 
-![Alt Text](https://github.com/Josue-Martinez-Moreno/blendernc/blob/master/cmocean_materials.png "cmocean colorbar in different textures")
+This add-on currently allow to import:
+- 2D fields (x, y):
+![Alt Text](https://github.com/josuemtzmo/blendernc/blob/master/docs/images/gebco_topo.gif "GEBCO Topography")
 
-Currently, this add-on allow you to:
-- Import 2D fields:
-![Alt Text](https://github.com/Josue-Martinez-Moreno/blendernc/blob/master/somov_topog.png "Somov Sea Topography")
+- 3D fields (x, y, time): 
+![Alt Text](https://github.com/josuemtzmo/blendernc/blob/master/docs/images/global_1deg_temp_brightness_vel_mag.png "Global 1 degree temperature, brightness: velocity magnitude")
 
-- Imported 3D fields: 
-![Alt Text](https://github.com/Josue-Martinez-Moreno/blendernc/blob/master/figures/animation_data.gif "Sin & Cos Function")
+- 4D fields (x, y, z = 0, time): 
+![Alt Text](https://github.com/josuemtzmo/blendernc/blob/master/docs/images/global_1deg_temp_brightness_vel_mag.gif "Global 1 degree temperature, brightness: velocity magnitude")
+
+Future development:
+- Load 1D arrays or compute global averages to build plots.
+- Apply displacement, texture and colormap to objects selected by user.
+- Shader node of colormap CMOCEAN (Read more about it at [cmocean GitHub](https://github.com/matplotlib/cmocean)).
+- Isosurface displacement.
+- Implement slicing over dimensions.
 
 ## Installation:
+** Blendernc works in Blender > 2.8 **
 
-**Testend on Blender v2.79 with PYTHON 3.6**
+- Include external python libraries into blender.
 
-Compile blender from scratch, The instructions are mostly the same as the official installation instructions except for a few modifications specified below: 
+![Alt Text](https://github.com/josuemtzmo/blendernc/blob/master/docs/images/modules_path.png "Select external libraries")
+
+Note that this folder must contain 3 sub-directories : `addons`, `modules`, and `startup`.
+You can install additionally libraries in the modules folder.
+
+
+- Link python libraries to compiled Blender. 
+Note: Libraries and Blender python should have the same distribution, if unsure, 
+compile blender following the official [Blender installation website](https://wiki.blender.org/index.php/Dev:Doc/Building_Blender/) instructions and modify: 
 
 ```bash
-mkdir ~/.blender-build
-cd ~/.blender-build
-git clone http://git.blender.org/blender.git
-cd blender
-make update
-
-mkdir ../build_python_3.6
-cd ../build_python_3.6
-
 cmake -DPYTHON_VERSION=3.6 ../blender
-
-make
-
-make install
-
-cd /bin/blender.app/Contents/Resources/2.79/scripts/modules
+```
+On **macOS**, find the folder `modules` within the blender.app:
+```bash
+cd /path2Applications/blender.app/Contents/Resources/2.8x/scripts/modules
 ```
 
-Then link all the packages from your main python folder:
+Then link all the packages from your python environment folder:
 ```bash
-export PYTHON_PATH="python_path"
-
 ln -s $PATH_PYTHON/lib/python3.6/site-packages/* .
 ```
 
-This particular step is really important, because then you can use python modules (netCDF4, xarray, and others) and local installations from your main python distribution.
+This step allows blendernc to use python modules (netCDF4, xarray, and others) and 
+local installations from your python environment. We encourage the use of 
+environments, however you can also use the main python located in 
+`/usr/local/lib/python3.6/site-packages/`
 
-For more information look at [Blender installation website](https://wiki.blender.org/index.php/Dev:Doc/Building_Blender/).
-
-The Add-on is not finished, so to test it you need to run it from the Text Editor Menu (Alt + P).
+**This Add-on is under development.**
 
