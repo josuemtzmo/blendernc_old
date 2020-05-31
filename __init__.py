@@ -31,14 +31,18 @@ from . core import BlenderncEngine
 from . netcdf_load import ( TEST_OT_cursor_center, LOAD_NC_OT_netCDF_load, 
             SELECTED_RESOLUTION_OT_netCDF_load_resolution, 
             CONVERT_NC_OT_netCDF_texture )
+
 from . blendernc_ui import ( BLENDERNC_UI_PT_3dview, BLENDERNC_LOAD_OT_Off, 
             BLENDERNC_LOAD_OT_On)
+
+from . warnings import ( FILE_EXISTS_OT_file_exists, LARGE_DATASET_OT_report)
 
 # Classes to register and unregister
 classes = (TEST_OT_cursor_center, LOAD_NC_OT_netCDF_load, 
             SELECTED_RESOLUTION_OT_netCDF_load_resolution, 
             CONVERT_NC_OT_netCDF_texture,  BLENDERNC_UI_PT_3dview, 
-            BLENDERNC_LOAD_OT_Off, BLENDERNC_LOAD_OT_On)
+            BLENDERNC_LOAD_OT_Off, BLENDERNC_LOAD_OT_On, 
+            FILE_EXISTS_OT_file_exists, LARGE_DATASET_OT_report)
 
 # Register and unregister functions
 register, unregister = bpy.utils.register_classes_factory(classes)
@@ -71,10 +75,9 @@ def update_proxy_resolution(self, context):
 # Scene globals
 bpy.types.Scene.blendernc_resolution = bpy.props.FloatProperty(name = 'Resolution', 
                                                 min = 1, max = 100, 
-                                                default = 20,
-                                                update=update_proxy_resolution)
-
-
+                                                default = 50, step =100,
+                                                update=update_proxy_resolution,
+                                                precision=0, options={'ANIMATABLE'})
 
 bpy.types.Scene.blendernc_netcdf_vars = bpy.props.EnumProperty(items=(''),
                                                                 name="")

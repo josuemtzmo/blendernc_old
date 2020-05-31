@@ -4,13 +4,13 @@ This add-on allows to import netCDF files into Blender as Textures and Objects (
 
 This add-on currently allow to import:
 - 2D fields (x, y):
-![Alt Text](https://github.com/josuemtzmo/blendernc/blob/master/docs/images/gebco_topo.gif "GEBCO Topography")
+![Alt Text](https://github.com/josuemtzmo/blendernc/blob/master/docs/images/gebco_topo.mp4 "GEBCO Topography")
 
 - 3D fields (x, y, time): 
 ![Alt Text](https://github.com/josuemtzmo/blendernc/blob/master/docs/images/global_1deg_temp_brightness_vel_mag.png "Global 1 degree temperature, brightness: velocity magnitude")
 
 - 4D fields (x, y, z = 0, time): 
-![Alt Text](https://github.com/josuemtzmo/blendernc/blob/master/docs/images/global_1deg_temp_brightness_vel_mag.gif "Global 1 degree temperature, brightness: velocity magnitude")
+![Alt Text](https://github.com/josuemtzmo/blendernc/blob/master/docs/images/global_1deg_temp_brightness_vel_mag.mp4 "Global 1 degree temperature, brightness: velocity magnitude")
 
 Future development:
 - Load 1D arrays or compute global averages to build plots.
@@ -18,6 +18,7 @@ Future development:
 - Shader node of colormap CMOCEAN (Read more about it at [cmocean GitHub](https://github.com/matplotlib/cmocean)).
 - Isosurface displacement.
 - Implement slicing over dimensions.
+- Load textures using Voxel Data for 4D and 3D without time implementations.
 
 ## Installation:
 ** Blendernc works in Blender > 2.8 **
