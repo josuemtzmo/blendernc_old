@@ -1,5 +1,9 @@
 # blendernc (Blender Addon 4 scientific visualization)
 
+| Read the Docs |
+|:-------------:|
+|[![Documentation Status](https://readthedocs.org/projects/blendernc/badge/?version=latest)](https://blendernc.readthedocs.io/en/latest/?badge=latest)|
+
 This add-on allows to import netCDF files into Blender as Textures and Objects (Future development). 
 
 This add-on currently allow to import:
