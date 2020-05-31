@@ -22,7 +22,7 @@ python:
   version: 3.7
   install:
     - method: pip
-        path: ./docs
+        path: docs
         extra_requirements:
            - docs
     - requirements: docs/requirements.txt
