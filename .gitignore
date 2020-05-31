@@ -2,3 +2,5 @@
 figures*
 data*
 *__pycache__*
+.vscode*
+
