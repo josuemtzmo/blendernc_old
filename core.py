@@ -1,6 +1,7 @@
 import bpy
 import os
 import xarray
+import numpy as np
 
 from . import files_utils
 
@@ -44,25 +45,31 @@ class BlenderncEngine():
     def netcdf_var(self):
         """
         """
-        dimensions=[i for i in self.dataset.coords.dims.keys()]
+        dimensions = [i for i in self.dataset.coords.dims.keys()]
         variable = list(self.dataset.variables.keys() - dimensions)
 
         var_names = [(variable[ii], variable[ii], self.dataset[variable[ii]].long_name, "DISK_DRIVE", ii) for ii in range(len(variable))]
         return var_names
 
-    def netcdf_values(self,selected_variable,res):
+    def netcdf_values(self,selected_variable,active_resolution):
         """
         """
-        self.selected_variable=selected_variable
-        active_resolution = res/100
+        self.selected_variable = selected_variable
 
         variable = self.dataset[selected_variable]
-        
-        dict_var_shape = {ii:slice(0,variable[ii].size,
-                int(variable[ii].size//(variable[ii].size*active_resolution))) 
+
+        dict_var_shape = {ii:slice(0,variable[ii].size,self.resolution_steps(variable[ii].size,active_resolution))
                 for ii in variable.coords if 'time' not in ii}
-        print(selected_variable,dict_var_shape)
+        print(active_resolution,selected_variable,dict_var_shape)
         # To Do: fix resolution implementation, perhaps a non linear coarsening
         variable_res = variable.isel(dict_var_shape)
         return variable_res
     
+    def resolution_steps(self,size,res):
+        res_interst = res/5 + 80
+        log_scale = np.log10(size)/np.log10((size*res_interst/100)) - 1
+        step = size * log_scale
+        if step ==0:
+            step = 1
+        print(log_scale,step,np.log10((size*res_interst/100)),np.log10(size))
+        return int(step)

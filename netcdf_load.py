@@ -43,14 +43,21 @@ class SELECTED_RESOLUTION_OT_netCDF_load_resolution(bpy.types.Operator):
     bl_label = "Create texture from netCDF"
     bl_description = "Create texture from netCDF"
 
+    def modal(self, context, event):
+        if event.type in {'ESC'}:
+            self.cancel(context)
+            return {'CANCELLED'}
+
     def execute(self, context):
         selected_variable=context.scene.blendernc_netcdf_vars
         selected_resolution = context.scene.blendernc_resolution
         if selected_variable != "":
             bpy.types.Scene.blendernc_data = blendernc_core.netcdf_values(selected_variable,selected_resolution)
             if bpy.data.textures.items() != []:
-                if selected_variable in bpy.data.textures[len(bpy.data.textures)-1].name:
+                if selected_variable in bpy.data.textures[len(bpy.data.textures)-1].name and (np.array(context.scene.blendernc_data.shape) < 2000).any():
                     bpy.ops.blendernc.netcdf2texture()
+                else:
+                    bpy.ops.blendernc.large_dataset()
         else:       
             bpy.ops.blendernc.button_file_on()
             self.report({"ERROR"}, "First you have to load a file")
@@ -61,9 +68,14 @@ class CONVERT_NC_OT_netCDF_texture(bpy.types.Operator):
     bl_label = "Create texture from netCDF"
     bl_description = "Create texture from netCDF"
 
+    def modal(self, context, event):
+        if event.type in {'ESC'}:
+            self.cancel(context)
+            return {'CANCELLED'}
+
     def execute(self, context):
         if not bpy.data.is_saved:
-            self.report({"ERROR"}, "Save the file first")
+            self.report({"WARNING"}, "Save the file first")
             return {'FINISHED'}
         try: 
             context.scene.blendernc_data
@@ -132,6 +144,8 @@ class CONVERT_NC_OT_netCDF_texture(bpy.types.Operator):
             image_name = image_format.format(1)
             if image_name not in bpy.data.images.keys():
                 bpy.data.images.new(image_name, width=x_res, height=y_res, alpha=True, float_buffer=False)
+            elif bpy.data.images[image_name].size[0] != x_res:
+                bpy.data.images[image_name].scale(x_res,y_res)
             
             outputImg = bpy.data.images[image_name] 
             if 'time' in coords_names.keys():
@@ -155,10 +169,14 @@ class CONVERT_NC_OT_netCDF_texture(bpy.types.Operator):
 
             #files.append({"name":image_format.format(ii), "name":image_format.format(ii)})
 
-        if len(coords_names.keys()) >= 3:
-            bpy.data.images[image_format.format(1)].source = "SEQUENCE"
-        bpy.data.images[image_format.format(1)].filepath = bpy.path.relpath(save_path)
 
+        if len(coords_names.keys()) == 2:
+            bpy.data.images[image_format.format(1)].source = "FILE"
+        elif len(coords_names.keys()) >= 3:
+            bpy.data.images[image_format.format(1)].source = "SEQUENCE"
+        
+        bpy.data.images[image_format.format(1)].filepath = bpy.path.relpath(save_path)
+        bpy.data.images[image_format.format(1)].reload()
 
         ## LAGGED FRAMES bpy.data.images['temp.00000.png.001'].frame_duration
             
