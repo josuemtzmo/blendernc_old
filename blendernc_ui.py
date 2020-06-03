@@ -66,6 +66,6 @@ class BLENDERNC_UI_PT_3dview(bpy.types.Panel):
         box_asts.prop(scn, 'blendernc_resolution')
         box_asts.label(text="Display resolution.", icon='INFO')
         
-        box_post_opt.operator('blendernc.netcdf2texture', text="Generate Texture")
+        box_post_opt.operator('blendernc.netcdf2texture', text="Bake Texture")
 
         box_post_opt.operator('blendernc.cursor_center', text="Center 3D Cursor")

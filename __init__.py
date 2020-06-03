@@ -30,22 +30,33 @@ from . core import BlenderncEngine
 # Import bpy clases
 from . netcdf_load import ( TEST_OT_cursor_center, LOAD_NC_OT_netCDF_load, 
             SELECTED_RESOLUTION_OT_netCDF_load_resolution, 
-            CONVERT_NC_OT_netCDF_texture )
+            CONVERT_NC_OT_netCDF_texture)
 
 from . blendernc_ui import ( BLENDERNC_UI_PT_3dview, BLENDERNC_LOAD_OT_Off, 
             BLENDERNC_LOAD_OT_On)
 
-from . warnings import ( FILE_EXISTS_OT_file_exists, LARGE_DATASET_OT_report)
+from . warnings import ( FILE_EXISTS_OT_file_exists, LARGE_DATASET_OT_report, 
+                         SAVE_FILE_OT_file_is_saved )
 
 # Classes to register and unregister
 classes = (TEST_OT_cursor_center, LOAD_NC_OT_netCDF_load, 
             SELECTED_RESOLUTION_OT_netCDF_load_resolution, 
-            CONVERT_NC_OT_netCDF_texture,  BLENDERNC_UI_PT_3dview, 
+            CONVERT_NC_OT_netCDF_texture, 
+            BLENDERNC_UI_PT_3dview, 
             BLENDERNC_LOAD_OT_Off, BLENDERNC_LOAD_OT_On, 
-            FILE_EXISTS_OT_file_exists, LARGE_DATASET_OT_report)
+            FILE_EXISTS_OT_file_exists, LARGE_DATASET_OT_report,
+            SAVE_FILE_OT_file_is_saved)
 
 # Register and unregister functions
-register, unregister = bpy.utils.register_classes_factory(classes)
+#register, unregister = bpy.utils.register_classes_factory(classes)
+def register():
+    for cls in classes:
+        bpy.utils.register_class(cls)
+
+
+def unregister():
+    for cls in classes:
+        bpy.utils.unregister_class(cls)
 
 # Initialize blendernc core
 blendernc_core = BlenderncEngine()

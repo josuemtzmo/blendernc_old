@@ -10,24 +10,29 @@ Welcome to blendernc's documentation!
    :maxdepth: 2
    :caption: Quick Start
 
-   blendernc
+   blendernc 
 
 .. toctree::
    :maxdepth: 2
    :caption: Dive in!
 
 
+
 .. toctree::
    :maxdepth: 2
    :caption: Examples
+
    examples/import_gebco
 
 .. toctree::
    :maxdepth: 2
    :caption: API Reference
 
+
+
 .. toctree::
    :caption: Help & References
+      
    help
 
 

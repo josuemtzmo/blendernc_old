@@ -1,6 +1,6 @@
-=========
-blendernc
-=========
+=====
+Scope
+=====
 
 **blendernc** is a blender add-on to efficiently import netCDF files into blender. 
 This add-on is currently under development, if you have any issue, utility to implement, or comment, 
