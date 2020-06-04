@@ -64,6 +64,8 @@ class SELECTED_RESOLUTION_OT_netCDF_load_resolution(bpy.types.Operator):
         else:       
             bpy.ops.blendernc.button_file_on()
             self.report({"ERROR"}, "First you have to load a file")
+
+        bpy.app.handlers.frame_change_pre.append(data2texture)
         return {'FINISHED'}
 
 class CONVERT_NC_OT_netCDF_texture(bpy.types.Operator):
@@ -84,7 +86,7 @@ class CONVERT_NC_OT_netCDF_texture(bpy.types.Operator):
             # ATM, the error is only display in the console not the UI.
             # bpy.ops.blendernc.file_is_saved()
             return {'FINISHED'}
-        
+
         try: 
             context.scene.blendernc_data
         except AttributeError:
@@ -103,99 +105,105 @@ class CONVERT_NC_OT_netCDF_texture(bpy.types.Operator):
             texture_name = bpy.data.textures[len(bpy.data.textures)-1].name
             bpy.data.textures[texture_name].name = context.scene.blendernc_data.name
 
-        # Identify spatial coordinates.
-        coords_names = {coords_name : 'x' if np.logical_or('x' in coords_name, 'lon' in coords_name) 
-                                else 'y' if np.logical_or('y' in coords_name, 'lat' in coords_name)
-                                else 'time' if np.logical_or('time' in coords_name, 'date' in coords_name) 
-                                else 'others' for coords_name in context.scene.blendernc_data.coords}
-        # Flip identified spatial coordinates to x:xcoord, y:ycoord
-        bpy.types.Scene.blender_var_names = {value: key for key, value in coords_names.items()}
-
-        # texture resolution
-        x_res = len(context.scene.blendernc_data[ bpy.types.Scene.blender_var_names['x']])
-        y_res = len(context.scene.blendernc_data[ bpy.types.Scene.blender_var_names['y']])
-        
-        if 'time' in coords_names.keys():
-            time = len(context.scene.blendernc_data[ bpy.types.Scene.blender_var_names['time']])
-        else:
-            time = 1
-        
-        depth = 0 ## TO DO add level selection
-
-        files = []
-
-        blender_file_path = bpy.path.abspath('//')
-       
-        # Create temporal file
-        tmp_folder(blender_file_path)
-        tmp_folder_path = os.path.join(blender_file_path,'.tmp_blendernc/')
-        
-        # Data to texture
-        ## TO DO: ADD support for 1D arrays to construct fancy plots
-        if len( bpy.types.Scene.blender_var_names.keys()) == 2:
-            data = context.scene.blendernc_data
-        elif len( bpy.types.Scene.blender_var_names.keys()) == 3:
-            data = context.scene.blendernc_data
-        elif len( bpy.types.Scene.blender_var_names.keys()) == 4: 
-            data = context.scene.blendernc_data.isel({ bpy.types.Scene.blender_var_names['others']:depth})
-        else:
-            self.report({"ERROR"}, "Blendernc currently supports 2D, 3D and 4D arrays")
-            return {'FINISHED'}
-
-        progress_manager = bpy.data.window_managers[0]
-        progress_manager.progress_begin(0,100)
+        # progress_manager = bpy.data.window_managers[0]
+        # progress_manager.progress_begin(0,100)
 
         image_format = context.scene.blendernc_data.name+".{0:05}.png"
 
         for ii in range(1,time+1):
-            self.data2texture(ii,x_res,y_res, bpy.types.Scene.blender_var_names)
-            progress_manager.progress_update(ii/time*100)
+            data2texture()
+            # progress_manager.progress_update(ii/time*100)
 
-        progress_manager.progress_end()
-
-        if len( bpy.types.Scene.blender_var_names.keys()) == 2:
-            bpy.data.images[image_format.format(1)].source = "FILE"
-        elif len( bpy.types.Scene.blender_var_names.keys()) >= 3:
-            bpy.data.images[image_format.format(1)].source = "SEQUENCE"
-        
-        # STORE if BAKED
-        bpy.data.images[image_format.format(1)].filepath = bpy.path.relpath(save_path)
-        bpy.data.images[image_format.format(1)].reload()
+        # progress_manager.progress_end()
 
         ## LAGGED FRAMES bpy.data.images['temp.00000.png.001'].frame_duration
         return {'FINISHED'}
 
-    def data2texture(self,keyframe,x_res,y_res,coords_names):
-        """
-        """
-        max_value = bpy.context.scene.blendernc_data.max()
-        min_value = bpy.context.scene.blendernc_data.min()
-        
-        image_format = bpy.context.scene.blendernc_data.name+".{0:05}.png"
-        image_name = image_format.format(1)
+def data2texture(scene, keyframe=None):
+    """
+    """
+    if keyframe==None:
+        keyframe = bpy.context.scene.frame_current
+    # Identify spatial coordinates.
+    coords_names = {coords_name : 'x' if np.logical_or('x' in coords_name, 'lon' in coords_name) 
+                            else 'y' if np.logical_or('y' in coords_name, 'lat' in coords_name)
+                            else 'time' if np.logical_or('time' in coords_name, 'date' in coords_name) 
+                            else 'others' for coords_name in bpy.context.scene.blendernc_data.coords}
+    # Flip identified spatial coordinates to x:xcoord, y:ycoord
+    bpy.types.Scene.blender_var_names = {value: key for key, value in coords_names.items()}
 
-        if image_name not in bpy.data.images.keys():
-            bpy.data.images.new(image_name,width=x_res, height=y_res, alpha=True, 
-                            float_buffer=True)
-        elif bpy.data.images[image_name].size[0] != x_res:
-            bpy.data.images[image_name].scale(x_res,y_res)
+    # texture resolution
+    x_res = len( bpy.context.scene.blendernc_data[ bpy.types.Scene.blender_var_names['x'] ] )
+    y_res = len( bpy.context.scene.blendernc_data[ bpy.types.Scene.blender_var_names['y'] ] )
+    
+    if 'time' in coords_names.keys():
+        time = len( bpy.context.scene.blendernc_data[ bpy.types.Scene.blender_var_names['time'] ] )
+    else:
+        time = 1
+    
+    depth = 0 ## TO DO add level selection
+
+    files = []
+
+    blender_file_path = bpy.path.abspath('//')
+    
+    # Create temporal file
+    tmp_folder(blender_file_path)
+    tmp_folder_path = os.path.join(blender_file_path,'.tmp_blendernc/')
+    
+    # Data to texture
+    ## TO DO: ADD support for 1D arrays to construct fancy plots
+    if len( bpy.types.Scene.blender_var_names.keys()) == 2:
+        data = bpy.context.scene.blendernc_data
+    elif len( bpy.types.Scene.blender_var_names.keys()) == 3:
+        data = bpy.context.scene.blendernc_data
+    elif len( bpy.types.Scene.blender_var_names.keys()) == 4: 
+        data = bpy.context.scene.blendernc_data.isel({ bpy.types.Scene.blender_var_names['others']:depth})
+    else:
+        self.report({"ERROR"}, "Blendernc currently supports 2D, 3D and 4D arrays")
+        return {'FINISHED'}
         
-        outputImg = bpy.data.images[image_name] 
-        if 'time' in coords_names.keys() :
+    max_value = bpy.context.scene.blendernc_data.max()
+    min_value = bpy.context.scene.blendernc_data.min()
+    
+    image_format = bpy.context.scene.blendernc_data.name+".{0:05}.png"
+    image_name = image_format.format(1)
+
+    if image_name not in bpy.data.images.keys():
+        bpy.data.images.new(image_name,width=x_res, height=y_res, alpha=True, 
+                        float_buffer=True)
+    elif bpy.data.images[image_name].size[0] != x_res:
+        bpy.data.images[image_name].scale(x_res,y_res)
+    
+    outputImg = bpy.data.images[image_name] 
+    if 'time' in coords_names.keys():
+        # If data.time smaller that keyframes, then display the last frame.
+        if bpy.context.scene.blendernc_data[bpy.types.Scene.blender_var_names['time']].size >= keyframe:
             data_snapshot = bpy.context.scene.blendernc_data.isel({ bpy.types.Scene.blender_var_names['time']:keyframe-1})
         else:
-            data_snapshot = bpy.context.scene.blendernc_data
-        alpha_channel = data_snapshot.where(np.isfinite(data_snapshot),0).where(~np.isfinite(data_snapshot),1).values
-        normalized_data = (data_snapshot - min_value) / (max_value-min_value)
+            data_snapshot = bpy.context.scene.blendernc_data.isel({ bpy.types.Scene.blender_var_names['time']:-1})
+    else:
+        data_snapshot = bpy.context.scene.blendernc_data
+    alpha_channel = data_snapshot.where(np.isfinite(data_snapshot),0).where(~np.isfinite(data_snapshot),1).values
+    normalized_data = (data_snapshot - min_value) / (max_value-min_value)
 
-        #BW in RGB format for image
-        rgb = np.repeat(normalized_data.values[:, :, np.newaxis], 3, axis=2)
+    #BW in RGB format for image
+    rgb = np.repeat(normalized_data.values[:, :, np.newaxis], 3, axis=2)
 
-        #BW = normalized_data.values[:, :, np.newaxis]
-        np_out_img = np.concatenate((rgb,alpha_channel[:,:,np.newaxis]),axis=2)
+    #BW = normalized_data.values[:, :, np.newaxis]
+    np_out_img = np.concatenate((rgb,alpha_channel[:,:,np.newaxis]),axis=2)
+    
+    # Write image pixels
+    outputImg.pixels = np_out_img.ravel()
+    
+    save_path = os.path.join(tmp_folder_path,image_format.format(keyframe))
+    bpy.data.images[image_name].save_render(save_path)
+
+    # if len( bpy.types.Scene.blender_var_names.keys()) == 2:
+    #     bpy.data.images[image_format.format(1)].source = "FILE"
+    # elif len( bpy.types.Scene.blender_var_names.keys()) >= 3:
+    #     bpy.data.images[image_format.format(1)].source = "SEQUENCE"
         
-        # Write image pixels
-        outputImg.pixels = np_out_img.ravel()
-        
-        save_path = os.path.join(tmp_folder_path,image_format.format(ii))
-        bpy.data.images[image_name].save_render(save_path)
+    # STORE if BAKED
+    bpy.data.images[image_format.format(1)].filepath = bpy.path.relpath(save_path)
+    bpy.data.images[image_format.format(1)].reload()
