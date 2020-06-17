@@ -1,4 +1,4 @@
-This repository is deprecated in favor of https://github.com/blendernc/blendernc/tree/dev.
+This repository is deprecated in favor of https://github.com/blendernc/blendernc/
 ============================================================================================================================
 
 # blendernc (Blender Addon 4 scientific visualization)
